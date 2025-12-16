@@ -3,6 +3,7 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { Float, Wireframe } from '@react-three/drei';
 import { motion } from 'framer-motion';
 import Magnetic from '../UI/Magnetic';
+import BubbleText from '../UI/BubbleText';
 
 function HeroObject() {
     const meshRef = useRef();
@@ -37,14 +38,13 @@ export default function Hero() {
                         Revaldy Sandy Aji
                     </motion.h1>
                 </Magnetic>
-                <motion.p
+                <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.5 }}
-                    className="text-xl md:text-2xl text-gray-400 font-light"
                 >
-                    Junior Frontend Developer & ML Enthusiast
-                </motion.p>
+                    <BubbleText text="Junior Frontend Developer & ML Enthusiast" />
+                </motion.div>
             </div>
 
             <div className="absolute inset-0 z-0 opacity-30">
@@ -54,6 +54,6 @@ export default function Hero() {
                     <HeroObject />
                 </Canvas>
             </div>
-        </section>
+        </section >
     );
 }

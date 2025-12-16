@@ -2,7 +2,6 @@ import React, { useRef, useMemo } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 
-// Generate a procedural circle texture for soft glow
 function getCircleTexture() {
     const size = 128;
     const canvas = document.createElement('canvas');
@@ -17,8 +16,6 @@ function getCircleTexture() {
     context.fillStyle = 'white';
     context.fill();
 
-    // Add a soft blur for glow effect
-    // We can simulate this with a gradient
     const gradient = context.createRadialGradient(center, center, 0, center, center, radius);
     gradient.addColorStop(0, 'rgba(255,255,255,1)');
     gradient.addColorStop(0.5, 'rgba(255,255,255,0.5)');
@@ -31,7 +28,6 @@ function getCircleTexture() {
     return texture;
 }
 
-// Generate a linear gradient texture for meteor tail
 function getGradientTexture() {
     const canvas = document.createElement('canvas');
     canvas.width = 32;
@@ -39,8 +35,8 @@ function getGradientTexture() {
     const context = canvas.getContext('2d');
 
     const gradient = context.createLinearGradient(0, 0, 32, 0);
-    gradient.addColorStop(0, 'rgba(255,255,255,0)'); // Tail end (transparent)
-    gradient.addColorStop(1, 'rgba(255,255,255,1)'); // Head (solid)
+    gradient.addColorStop(0, 'rgba(255,255,255,0)');
+    gradient.addColorStop(1, 'rgba(255,255,255,1)');
 
     context.fillStyle = gradient;
     context.fillRect(0, 0, 32, 32);
@@ -60,7 +56,7 @@ function ShootingStar() {
             ref.current.position.x += ref.current.userData.vx;
             ref.current.position.y += ref.current.userData.vy;
 
-            // Check if out of bounds (far enough to be gone)
+
             const boundX = viewport.width / 2 + 10;
             const boundY = viewport.height / 2 + 10;
 
@@ -69,20 +65,14 @@ function ShootingStar() {
                 setActive(false);
             }
         } else if (!active) {
-            // Random chance to spawn
             if (Math.random() < 0.005) {
                 setActive(true);
 
-                // Spawn from Corners OR Sides Logic
-                // 0: Top-Left, 1: Top-Right, 2: Bottom-Left, 3: Bottom-Right
-                // 4: Left Side, 5: Right Side
                 const spawnType = Math.floor(Math.random() * 6);
 
                 let startX, startY, vx, vy, angle;
 
-                const offset = 2; // spawn just outside
-
-                // Aim towards center-ish with some randomness
+                const offset = 2;
                 const targetX = (Math.random() - 0.5) * (viewport.width * 0.5);
                 const targetY = (Math.random() - 0.5) * (viewport.height * 0.5);
 
@@ -109,7 +99,7 @@ function ShootingStar() {
                 const dx = targetX - startX;
                 const dy = targetY - startY;
                 const len = Math.sqrt(dx * dx + dy * dy);
-                const speed = 0.4 + Math.random() * 0.2; // Speed
+                const speed = 0.4 + Math.random() * 0.2;
 
                 vx = (dx / len) * speed;
                 vy = (dy / len) * speed;
@@ -157,10 +147,8 @@ function Particles({ count = 1500 }) {
     const particles = useMemo(() => {
         const temp = [];
         for (let i = 0; i < count; i++) {
-            // Deep Starfield: Spread wide and deep
             const x = (Math.random() - 0.5) * viewport.width * 4;
             const y = (Math.random() - 0.5) * viewport.height * 4;
-            // Z depth from -30 (far) to 0 (near camera plane)
             const z = (Math.random() - 0.5) * 30;
 
             temp.push({
@@ -181,9 +169,7 @@ function Particles({ count = 1500 }) {
         for (let i = 0; i < count; i++) {
             pos[i * 3] = particles[i].x;
             pos[i * 3 + 1] = particles[i].y;
-            pos[i * 3 + 2] = particles[i].z; // Use deep Z
-
-            // Brighter/Dimmer stars based on mixing
+            pos[i * 3 + 2] = particles[i].z;
             if (Math.random() > 0.8) {
                 color.set('#ffffff');
             } else {
@@ -197,7 +183,7 @@ function Particles({ count = 1500 }) {
         return [pos, col];
     }, [particles, count]);
 
-    // Track mouse manually because overlaying HTML elements block Canvas events
+
     const mouseRef = useRef({ x: 0, y: 0 });
 
     React.useEffect(() => {
@@ -218,7 +204,7 @@ function Particles({ count = 1500 }) {
             const i3 = i * 3;
             const p = particles[i];
 
-            // 1. Ambient Drift (Oscillation around home)
+
             const time = state.clock.getElapsedTime();
             const zFactor = 1 + (p.z / 30);
 
@@ -228,8 +214,8 @@ function Particles({ count = 1500 }) {
             const targetX = p.ox + driftX;
             const targetY = p.oy + driftY;
 
-            // 2. Spring Force (Pull back to target)
-            // SMOOTHER: Lower stiffness (0.05) to reduce "snap", creating a gentler return
+
+
             const springStrength = 0.05;
 
             const returnForceX = (targetX - p.x) * springStrength;
@@ -238,7 +224,7 @@ function Particles({ count = 1500 }) {
             p.vx += returnForceX;
             p.vy += returnForceY;
 
-            // 3. Mouse Interaction (Repulsion Force Field)
+            p.vy += returnForceY;
             const dx = mx - p.x;
             const dy = my - p.y;
             const distSq = dx * dx + dy * dy;
@@ -254,8 +240,6 @@ function Particles({ count = 1500 }) {
                 p.vy -= Math.sin(angle) * repulseForce * 0.05;
             }
 
-            // 4. Physics Update
-            // HEAVIER DAMPING: 0.80 kills oscillation/bounce faster
             const friction = 0.80;
             p.vx *= friction;
             p.vy *= friction;
@@ -300,6 +284,91 @@ function Particles({ count = 1500 }) {
             </points>
             <Meteors />
         </>
+    );
+}
+
+export function WarpStars({ isWarping }) {
+    const { viewport } = useThree();
+    const count = 2000;
+    const mesh = useRef();
+
+    const texture = useMemo(() => getCircleTexture(), []);
+
+    // Initial positions
+    const [positions, initialZ] = useMemo(() => {
+        const pos = new Float32Array(count * 3);
+        const zArr = new Float32Array(count);
+
+        for (let i = 0; i < count; i++) {
+            pos[i * 3] = (Math.random() - 0.5) * viewport.width * 4;
+            pos[i * 3 + 1] = (Math.random() - 0.5) * viewport.height * 4;
+            const z = (Math.random() - 0.5) * 100 - 50;
+            pos[i * 3 + 2] = z;
+            zArr[i] = z;
+        }
+        return [pos, zArr];
+    }, [viewport]);
+
+    useFrame((state, delta) => {
+        const targetSpeed = isWarping ? 50.0 : 2.0;
+
+        const acceleration = isWarping ? 0.05 : 0.1;
+
+        if (!mesh.current.userData.speed) mesh.current.userData.speed = 2.0;
+
+        mesh.current.userData.speed = THREE.MathUtils.lerp(
+            mesh.current.userData.speed,
+            targetSpeed,
+            acceleration
+        );
+
+        const currentSpeed = mesh.current.userData.speed;
+        const positions = mesh.current.geometry.attributes.position.array;
+
+        for (let i = 0; i < count; i++) {
+            const i3 = i * 3;
+
+            // Move Z towards camera (positive direction usually if looking down -Z, 
+            // but here we set camera at +5 looking at 0,0,0 usually? 
+            // Let's assume standard: Camera at +5. Stars at -50..0.
+            // Move +Z to approach camera.
+
+            positions[i3 + 2] += currentSpeed * delta;
+
+            if (positions[i3 + 2] > 10) {
+                positions[i3 + 2] = -100;
+                positions[i3] = (Math.random() - 0.5) * viewport.width * 4;
+                positions[i3 + 1] = (Math.random() - 0.5) * viewport.height * 4;
+            }
+        }
+
+        mesh.current.geometry.attributes.position.needsUpdate = true;
+
+        if (isWarping) {
+        }
+    });
+
+    return (
+        <points ref={mesh}>
+            <bufferGeometry>
+                <bufferAttribute
+                    attach="attributes-position"
+                    count={count}
+                    array={positions}
+                    itemSize={3}
+                />
+            </bufferGeometry>
+            <pointsMaterial
+                size={0.1}
+                map={texture}
+                color="white"
+                transparent
+                opacity={0.8}
+                sizeAttenuation={true}
+                depthWrite={false}
+                blending={THREE.AdditiveBlending}
+            />
+        </points>
     );
 }
 

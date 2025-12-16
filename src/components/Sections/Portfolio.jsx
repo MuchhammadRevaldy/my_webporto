@@ -4,6 +4,20 @@ import { FiExternalLink, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 
 const projects = [
     {
+        id: 5,
+        title: "WorkLab Insight",
+        desc: "A comprehensive economic analytics platform designed to visualize critical labor market data. Features interactive dashboards for tracking unemployment rates, labor issues, and regional economic growth.",
+        tags: ["Tailwind CSS", "Recharts", "Data Vis"],
+        link: "https://worklabinsight.vercel.app/index.html"
+    },
+    {
+        id: 6,
+        title: "NutriGuard",
+        desc: "Integrated health platform featuring AI-powered food scanning (NutriScan) utilizing an image detection model, family profile management, and smart recipe generation. Uses Groq API for rapid analysis and Larave/Python backend.",
+        tags: ["React.js", "Laravel", "Python", "Groq API"],
+        link: "https://lte-lyzer.atmadja.id/"
+    },
+    {
         id: 1,
         title: "QC Machine Production App",
         desc: "A production-quality control app used by operators to perform, log, and monitor machine quality checks. Features photo attachments, timestamped entries, and digital signature capture for audit-friendly records.",
@@ -26,26 +40,18 @@ const projects = [
         title: "Image Classification Model",
         desc: "Developed a high-accuracy Convolutional Neural Network (CNN) for image classification as part of the LKS Artificial Intelligence 2023 competition. Optimized for real-time inference and deployed for practical use cases.",
         tags: ["Python", "TensorFlow", "CNN", "Computer Vision"]
-    },
-    {
-        id: 5,
-        title: "WorkLab Insight",
-        desc: "A comprehensive economic analytics platform designed to visualize critical labor market data. Features interactive dashboards for tracking unemployment rates, labor issues, and regional economic growth.",
-        tags: ["Tailwind CSS", "Recharts", "Data Vis"],
-        link: "https://worklabinsight.vercel.app/index.html"
-    },
-    {
-        id: 6,
-        title: "NutriGuard",
-        desc: "Integrated health platform featuring AI-powered food scanning (NutriScan), family profile management, and smart recipe generation. Uses Groq API for rapid analysis and Larave/Python backend.",
-        tags: ["React.js", "Laravel", "Python", "Groq API"],
-        link: "https://lte-lyzer.atmadja.id/"
     }
 ];
 
-const ProjectCard = ({ project }) => {
+const ProjectCard = ({ project, index }) => {
     return (
-        <div className="h-full group relative p-6 md:p-8 bg-gradient-to-br from-white/[0.02] to-transparent backdrop-blur-[2px] border border-white/10 rounded-3xl overflow-hidden hover:border-brand-500/30 transition-all duration-300 flex flex-col shadow-xl">
+        <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.5, delay: index * 0.1 }}
+            className="h-full group relative p-6 md:p-8 bg-gradient-to-br from-white/[0.02] to-transparent backdrop-blur-[2px] border border-white/10 rounded-3xl overflow-hidden hover:border-brand-500/30 transition-all duration-300 flex flex-col shadow-xl"
+        >
             {/* Hover Glow Effect */}
             <div className="absolute inset-0 bg-brand-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
@@ -82,7 +88,7 @@ const ProjectCard = ({ project }) => {
                     ))}
                 </div>
             </div>
-        </div>
+        </motion.div>
     );
 };
 
@@ -162,6 +168,19 @@ export default function Portfolio() {
                 <div className="overflow-hidden w-full">
                     <motion.div
                         className="flex"
+                        drag="x"
+                        dragConstraints={{ left: 0, right: 0 }}
+                        dragElastic={0.2}
+                        onDragEnd={(e, { offset, velocity }) => {
+                            const swipe = offset.x; // negative = left, positive = right
+                            const swipeThreshold = 50;
+
+                            if (swipe < -swipeThreshold || velocity.x < -500) {
+                                slideNext();
+                            } else if (swipe > swipeThreshold || velocity.x > 500) {
+                                slidePrev();
+                            }
+                        }}
                         animate={{
                             x: `-${currentIndex * (100 / itemsPerView)}%`
                         }}
@@ -171,7 +190,7 @@ export default function Portfolio() {
                             damping: 30
                         }}
                     >
-                        {projects.map((project) => (
+                        {projects.map((project, index) => (
                             <div
                                 key={project.id}
                                 className={`flex-shrink-0 p-3 md:p-4 box-border`}
@@ -180,7 +199,7 @@ export default function Portfolio() {
                                 }}
                             >
                                 <div className="h-[500px]">
-                                    <ProjectCard project={project} />
+                                    <ProjectCard project={project} index={index} />
                                 </div>
                             </div>
                         ))}
