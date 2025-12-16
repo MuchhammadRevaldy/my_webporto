@@ -146,7 +146,7 @@ export default function Portfolio() {
             <div className="relative w-full max-w-7xl mx-auto px-4 md:px-12">
 
                 {/* Navigation Buttons: Side of the Carousel */}
-                <div className="absolute top-1/2 -translate-y-1/2 -left-2 md:-left-8 z-30 pointer-events-auto">
+                <div className="absolute top-1/2 -translate-y-1/2 left-1 md:-left-8 z-30 pointer-events-auto">
                     <button
                         onClick={slidePrev}
                         className="bg-white/5 hover:bg-white/10 backdrop-blur-md p-3 md:p-4 rounded-full text-white transition-all border border-white/10 hover:border-brand-500/50 shadow-lg active:scale-95"
@@ -155,7 +155,7 @@ export default function Portfolio() {
                     </button>
                 </div>
 
-                <div className="absolute top-1/2 -translate-y-1/2 -right-2 md:-right-8 z-30 pointer-events-auto">
+                <div className="absolute top-1/2 -translate-y-1/2 right-1 md:-right-8 z-30 pointer-events-auto">
                     <button
                         onClick={slideNext}
                         className="bg-white/5 hover:bg-white/10 backdrop-blur-md p-3 md:p-4 rounded-full text-white transition-all border border-white/10 hover:border-brand-500/50 shadow-lg active:scale-95"
@@ -193,7 +193,7 @@ export default function Portfolio() {
                         {projects.map((project, index) => (
                             <div
                                 key={project.id}
-                                className={`flex-shrink-0 p-3 md:p-4 box-border`}
+                                className={`flex-shrink-0 p-8 md:p-4 box-border`}
                                 style={{
                                     width: `${100 / itemsPerView}%`
                                 }}
