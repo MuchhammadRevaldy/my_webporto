@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import Magnetic from './Magnetic';
 
 export default function Navbar() {
@@ -14,12 +15,18 @@ export default function Navbar() {
         { name: 'Home', id: 'hero' },
         { name: 'Experience', id: 'experience' },
         { name: 'Achievements', id: 'achievements' },
+        { name: 'Portfolio', id: 'portfolio' },
         { name: 'Tech', id: 'tech' },
         { name: 'Contact', id: 'contact' },
     ];
 
     return (
-        <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50">
+        <motion.nav
+            initial={{ y: -100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ type: "spring", stiffness: 100, damping: 10, duration: 0.8 }}
+            className="fixed top-6 left-1/2 -translate-x-1/2 z-50"
+        >
             <div className="px-6 py-3 rounded-full bg-gradient-to-br from-white/[0.02] to-transparent backdrop-blur-[2px] border border-white/10 shadow-lg flex items-center gap-6">
                 {navItems.map((item) => (
                     <Magnetic key={item.name}>
@@ -33,6 +40,6 @@ export default function Navbar() {
                     </Magnetic>
                 ))}
             </div>
-        </nav>
+        </motion.nav>
     );
 }

@@ -28,9 +28,14 @@ export default function Hero() {
         <section id="hero" className="relative h-screen flex flex-col items-center justify-center overflow-hidden">
             <div className="z-10 flex flex-col items-center text-center p-4">
                 <Magnetic>
-                    <h1 className="text-6xl md:text-8xl font-display font-bold mb-4 tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-white to-brand-400 cursor-default">
+                    <motion.h1
+                        initial={{ y: 100, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{ duration: 0.8, ease: "easeOut" }}
+                        className="text-6xl md:text-8xl font-display font-bold mb-4 tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-white to-brand-400 cursor-default"
+                    >
                         Revaldy Sandy Aji
-                    </h1>
+                    </motion.h1>
                 </Magnetic>
                 <motion.p
                     initial={{ opacity: 0, y: 20 }}
