@@ -25,7 +25,7 @@ function HeroObject() {
 
 export default function Hero() {
     return (
-        <section className="relative h-screen flex flex-col items-center justify-center overflow-hidden">
+        <section id="hero" className="relative h-screen flex flex-col items-center justify-center overflow-hidden">
             <div className="z-10 flex flex-col items-center text-center p-4">
                 <Magnetic>
                     <h1 className="text-6xl md:text-8xl font-display font-bold mb-4 tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-white to-brand-400 cursor-default">
@@ -38,7 +38,7 @@ export default function Hero() {
                     transition={{ delay: 0.5 }}
                     className="text-xl md:text-2xl text-gray-400 font-light"
                 >
-                    Junior Mobile Developer & Cloud Enthusiast
+                    Junior Frontend Developer & ML Enthusiast
                 </motion.p>
             </div>
 

@@ -15,7 +15,7 @@ const techs = [
 
 export default function TechStack() {
     return (
-        <section className="min-h-[50vh] py-20 relative z-10 flex flex-col items-center justify-center overflow-hidden">
+        <section id="tech" className="min-h-[50vh] py-20 relative z-10 flex flex-col items-center justify-center overflow-hidden">
             <h2 className="text-4xl md:text-5xl font-display font-bold mb-16 text-center">Tech Stack</h2>
 
             <div className="flex flex-wrap justify-center gap-12 max-w-4xl px-4">

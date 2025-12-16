@@ -3,7 +3,7 @@ import Magnetic from '../UI/Magnetic';
 
 export default function Contact() {
     return (
-        <section className="min-h-[60vh] py-20 px-6 relative z-10 flex flex-col items-center justify-center">
+        <section id="contact" className="min-h-[60vh] py-20 px-6 relative z-10 flex flex-col items-center justify-center">
             <div className="w-full max-w-2xl bg-gradient-to-br from-white/[0.02] to-transparent backdrop-blur-[2px] border border-white/10 p-12 rounded-3xl text-center shadow-2xl">
                 <h2 className="text-4xl md:text-5xl font-display font-bold mb-8">Ready to Collaborate?</h2>
                 <p className="text-gray-400 text-lg mb-10 max-w-md mx-auto">

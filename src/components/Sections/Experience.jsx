@@ -4,10 +4,10 @@ import { motion } from 'framer-motion';
 const experiences = [
     {
         id: 1,
-        role: "Mobile Developer Intern",
-        company: "CV. Karya Hidup Sentosa",
-        desc: "Built internal mobile apps for operational workflows, reduced manual error rates. API Integration.",
-        period: "2023 - Present"
+        role: "Junior Mobile Developer Intern",
+        company: "CV. Karya Hidup Sentosa (Quick Tractor)",
+        desc: "Developed internal software to support product management. Built user-friendly mobile apps for field data input, reducing manual errors. Collaborated with backend developers for real-time API integration.",
+        period: "June 2023 - June 2024"
     },
     {
         id: 2,
@@ -43,7 +43,7 @@ const Card = ({ item, index }) => {
 
 export default function Experience() {
     return (
-        <section className="min-h-screen py-20 px-6 relative z-10 flex flex-col items-center justify-center">
+        <section id="experience" className="min-h-screen py-20 px-6 relative z-10 flex flex-col items-center justify-center">
             <h2 className="text-4xl md:text-5xl font-display font-bold mb-16 text-center">Experience</h2>
             <div className="flex flex-col md:flex-row gap-8 w-full max-w-5xl justify-center items-center">
                 {experiences.map((exp, i) => (
