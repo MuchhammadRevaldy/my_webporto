@@ -1,0 +1,54 @@
+import React, { useRef } from 'react';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { Float, Wireframe } from '@react-three/drei';
+import { motion } from 'framer-motion';
+import Magnetic from '../UI/Magnetic';
+
+function HeroObject() {
+    const meshRef = useRef();
+
+    useFrame((state) => {
+        const time = state.clock.getElapsedTime();
+        meshRef.current.rotation.x = Math.sin(time / 4);
+        meshRef.current.rotation.y = Math.sin(time / 2);
+    });
+
+    return (
+        <Float speed={2} rotationIntensity={1.5} floatIntensity={2}>
+            <mesh ref={meshRef} scale={2}>
+                <icosahedronGeometry args={[1, 1]} />
+                <meshStandardMaterial color="#64ffda" wireframe />
+            </mesh>
+        </Float>
+    );
+}
+
+export default function Hero() {
+    return (
+        <section className="relative h-screen flex flex-col items-center justify-center overflow-hidden">
+            <div className="z-10 flex flex-col items-center text-center p-4">
+                <Magnetic>
+                    <h1 className="text-6xl md:text-8xl font-display font-bold mb-4 tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-white to-brand-400 cursor-default">
+                        Revaldy Sandy Aji
+                    </h1>
+                </Magnetic>
+                <motion.p
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5 }}
+                    className="text-xl md:text-2xl text-gray-400 font-light"
+                >
+                    Junior Mobile Developer & Cloud Enthusiast
+                </motion.p>
+            </div>
+
+            <div className="absolute inset-0 z-0 opacity-30">
+                <Canvas>
+                    <ambientLight intensity={0.5} />
+                    <pointLight position={[10, 10, 10]} />
+                    <HeroObject />
+                </Canvas>
+            </div>
+        </section>
+    );
+}
