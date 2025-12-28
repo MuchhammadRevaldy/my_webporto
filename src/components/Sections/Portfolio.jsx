@@ -4,6 +4,13 @@ import { FiExternalLink, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 
 const projects = [
     {
+        id: 7,
+        title: "MindSight",
+        desc: "AI-powered emotional intelligence platform that helps users discover their inner self through facial analysis and psychology-based personalized insights.",
+        tags: ["React", "AI", "Facial Analysis", "Mood Tracker"],
+        link: "https://mindsight-web-delta.vercel.app/"
+    },
+    {
         id: 5,
         title: "WorkLab Insight",
         desc: "A comprehensive economic analytics platform designed to visualize critical labor market data. Features interactive dashboards for tracking unemployment rates, labor issues, and regional economic growth.",
