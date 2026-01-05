@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiGithub, FiAlertTriangle, FiX, FiCheck } from 'react-icons/fi';
+import { FiGithub, FiAlertTriangle, FiX, FiCheck, FiLinkedin } from 'react-icons/fi';
 import Magnetic from '../UI/Magnetic';
 import BubbleText from '../UI/BubbleText';
 
@@ -41,6 +41,18 @@ export default function Contact({ onOpenCV }) {
                         >
                             Download CV
                         </button>
+                    </Magnetic>
+
+                    <Magnetic>
+                        <a
+                            href="https://www.linkedin.com/in/revaldy-sandy-a4657b219/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="p-4 border border-white/20 text-white font-bold rounded-full text-lg hover:bg-white/10 hover:text-brand-300 transition-colors backdrop-blur-sm flex items-center gap-2"
+                        >
+                            <FiLinkedin size={24} />
+                            <span className="md:hidden">LinkedIn</span>
+                        </a>
                     </Magnetic>
 
                     <Magnetic>
