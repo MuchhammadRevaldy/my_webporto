@@ -22,19 +22,15 @@ function App() {
   const [showCV, setShowCV] = useState(false);
 
   useEffect(() => {
-    if (introFinished) {
-      // Small delay before showing heavy content to allow browser to recover from "warp"
-      setTimeout(() => {
-        setContentVisible(true);
-        const lenis = new Lenis();
-        function raf(time) {
-          lenis.raf(time);
-          requestAnimationFrame(raf);
-        }
+    if (contentVisible) {
+      const lenis = new Lenis();
+      function raf(time) {
+        lenis.raf(time);
         requestAnimationFrame(raf);
-      }, 100);
+      }
+      requestAnimationFrame(raf);
     }
-  }, [introFinished]);
+  }, [contentVisible]);
 
   const handleStart = () => {
     setIsWarping(true);
@@ -47,7 +43,7 @@ function App() {
     <main className="relative w-full min-h-screen text-white overflow-x-hidden">
 
 
-      <AnimatePresence mode='wait'>
+      <AnimatePresence mode='wait' onExitComplete={() => setContentVisible(true)}>
         {!introFinished && (
           <motion.div
             className="fixed inset-0 z-50 flex items-center justify-center bg-black"
@@ -97,7 +93,7 @@ function App() {
       </AnimatePresence>
 
 
-      {introFinished && (
+      {contentVisible && (
         <>
           <GlobalBackground />
           <motion.div
@@ -107,16 +103,14 @@ function App() {
           >
             <Navbar />
             <Hero />
-            {contentVisible && (
-              <>
-                <About />
-                <Experience />
-                <Achievements />
-                <Portfolio />
-                <TechStack />
-                <Contact onOpenCV={() => setShowCV(true)} />
-              </>
-            )}
+            <>
+              <About />
+              <Experience />
+              <Achievements />
+              <Portfolio />
+              <TechStack />
+              <Contact onOpenCV={() => setShowCV(true)} />
+            </>
             <CVPreview isOpen={showCV} onClose={() => setShowCV(false)} />
           </motion.div>
         </>

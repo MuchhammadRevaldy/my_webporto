@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const achievements = [
@@ -88,58 +89,61 @@ export default function Achievements() {
                 })}
             </motion.div>
 
-            <AnimatePresence>
-                {selectedId && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
-                        onClick={() => setSelectedId(null)}
-                    >
+            {createPortal(
+                <AnimatePresence>
+                    {selectedId && (
                         <motion.div
-                            layoutId={`card-${selectedId}`}
-                            className="w-full max-w-lg bg-gradient-to-br from-white/[0.02] to-black/20 backdrop-blur-[2px] border border-white/10 p-8 rounded-3xl relative shadow-2xl max-h-[85vh] overflow-y-auto"
-                            onClick={(e) => e.stopPropagation()}
-                            transition={{ type: "spring", stiffness: 200, damping: 20 }}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+                            onClick={() => setSelectedId(null)}
                         >
-                            {/* Hide content immediately on close to prevent "squashed" look */}
                             <motion.div
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                exit={{ opacity: 0, transition: { duration: 0.1 } }}
+                                layoutId={`card-${selectedId}`}
+                                className="w-full max-w-lg bg-gradient-to-br from-white/[0.02] to-black/20 backdrop-blur-[2px] border border-white/10 p-8 rounded-3xl relative shadow-2xl max-h-[85vh] overflow-y-auto"
+                                onClick={(e) => e.stopPropagation()}
+                                transition={{ type: "spring", stiffness: 200, damping: 20 }}
                             >
-                                <button
-                                    onClick={() => setSelectedId(null)}
-                                    className="absolute top-4 right-4 text-gray-400 hover:text-white bg-black/50 rounded-full p-2 hover:bg-black/70 transition-colors z-[60]"
+                                {/* Hide content immediately on close to prevent "squashed" look */}
+                                <motion.div
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0, transition: { duration: 0.1 } }}
                                 >
-                                    ✕
-                                </button>
-                                {(() => {
-                                    const item = achievements.find(a => a.id === selectedId);
-                                    return (
-                                        <div className="flex flex-col gap-4">
-                                            <div>
-                                                <h3 className="text-2xl font-bold mb-2 text-brand-400">{item.title}</h3>
-                                                <p className="text-gray-300">{item.detail}</p>
-                                            </div>
-                                            {item.image && (
-                                                <div className="rounded-xl overflow-hidden border border-white/10 shadow-lg mt-2">
-                                                    <img
-                                                        src={item.image}
-                                                        alt={`${item.title} Certificate`}
-                                                        className="w-full h-auto object-cover"
-                                                    />
+                                    <button
+                                        onClick={() => setSelectedId(null)}
+                                        className="absolute top-4 right-4 text-gray-400 hover:text-white bg-black/50 rounded-full p-2 hover:bg-black/70 transition-colors z-[60]"
+                                    >
+                                        ✕
+                                    </button>
+                                    {(() => {
+                                        const item = achievements.find(a => a.id === selectedId);
+                                        return (
+                                            <div className="flex flex-col gap-4">
+                                                <div>
+                                                    <h3 className="text-2xl font-bold mb-2 text-brand-400">{item.title}</h3>
+                                                    <p className="text-gray-300">{item.detail}</p>
                                                 </div>
-                                            )}
-                                        </div>
-                                    );
-                                })()}
+                                                {item.image && (
+                                                    <div className="rounded-xl overflow-hidden border border-white/10 shadow-lg mt-2">
+                                                        <img
+                                                            src={item.image}
+                                                            alt={`${item.title} Certificate`}
+                                                            className="w-full h-auto object-cover"
+                                                        />
+                                                    </div>
+                                                )}
+                                            </div>
+                                        );
+                                    })()}
+                                </motion.div>
                             </motion.div>
                         </motion.div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+                    )}
+                </AnimatePresence>,
+                document.body
+            )}
         </section>
     );
 }

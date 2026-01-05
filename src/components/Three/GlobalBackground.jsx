@@ -139,37 +139,41 @@ function Meteors() {
 
 function Particles({ count = 1500 }) {
     const mesh = useRef();
-    const { viewport, mouse } = useThree();
+    const { viewport } = useThree();
 
     const circleTexture = useMemo(() => getCircleTexture(), []);
 
+    const [positions, initialPositions, velocities] = useMemo(() => {
+        const pos = new Float32Array(count * 3);
+        const initial = new Float32Array(count * 3);
+        const vels = new Float32Array(count * 3);
 
-    const particles = useMemo(() => {
-        const temp = [];
         for (let i = 0; i < count; i++) {
             const x = (Math.random() - 0.5) * viewport.width * 4;
             const y = (Math.random() - 0.5) * viewport.height * 4;
             const z = (Math.random() - 0.5) * 30;
 
-            temp.push({
-                x, y, z,
-                ox: x, oy: y, oz: z,
-                vx: 0, vy: 0, vz: 0
-            });
+            const i3 = i * 3;
+            pos[i3] = x;
+            pos[i3 + 1] = y;
+            pos[i3 + 2] = z;
+
+            initial[i3] = x;
+            initial[i3 + 1] = y;
+            initial[i3 + 2] = z;
+
+            vels[i3] = 0;
+            vels[i3 + 1] = 0;
+            vels[i3 + 2] = 0;
         }
-        return temp;
-    }, [viewport]);
+        return [pos, initial, vels];
+    }, [viewport, count]);
 
-
-    const [positions, colors] = useMemo(() => {
-        const pos = new Float32Array(count * 3);
+    const colors = useMemo(() => {
         const col = new Float32Array(count * 3);
         const color = new THREE.Color();
 
         for (let i = 0; i < count; i++) {
-            pos[i * 3] = particles[i].x;
-            pos[i * 3 + 1] = particles[i].y;
-            pos[i * 3 + 2] = particles[i].z;
             if (Math.random() > 0.8) {
                 color.set('#ffffff');
             } else {
@@ -179,10 +183,8 @@ function Particles({ count = 1500 }) {
             col[i * 3 + 1] = color.g;
             col[i * 3 + 2] = color.b;
         }
-
-        return [pos, col];
-    }, [particles, count]);
-
+        return col;
+    }, [count]);
 
     const mouseRef = useRef({ x: 0, y: 0 });
 
@@ -199,56 +201,58 @@ function Particles({ count = 1500 }) {
     useFrame((state) => {
         const mx = (mouseRef.current.x * viewport.width) / 2;
         const my = (mouseRef.current.y * viewport.height) / 2;
+        const time = state.clock.getElapsedTime();
+
+        const currentPositions = mesh.current.geometry.attributes.position.array;
 
         for (let i = 0; i < count; i++) {
             const i3 = i * 3;
-            const p = particles[i];
 
+            const px = currentPositions[i3];
+            const py = currentPositions[i3 + 1];
+            const pz = currentPositions[i3 + 2];
 
-            const time = state.clock.getElapsedTime();
-            const zFactor = 1 + (p.z / 30);
+            const ox = initialPositions[i3];
+            const oy = initialPositions[i3 + 1];
 
-            const driftX = Math.sin(time * 0.5 + p.ox * 0.5) * 0.5 * zFactor;
-            const driftY = Math.cos(time * 0.3 + p.oy * 0.5) * 0.5 * zFactor;
+            // 1. Natural Drift
+            const zFactor = 1 + (pz / 30);
+            const driftX = Math.sin(time * 0.5 + ox * 0.5) * 0.5 * zFactor;
+            const driftY = Math.cos(time * 0.3 + oy * 0.5) * 0.5 * zFactor;
 
-            const targetX = p.ox + driftX;
-            const targetY = p.oy + driftY;
-
-
+            const targetX = ox + driftX;
+            const targetY = oy + driftY;
 
             const springStrength = 0.05;
+            const returnForceX = (targetX - px) * springStrength;
+            const returnForceY = (targetY - py) * springStrength;
 
-            const returnForceX = (targetX - p.x) * springStrength;
-            const returnForceY = (targetY - p.y) * springStrength;
+            velocities[i3] += returnForceX;
+            velocities[i3 + 1] += returnForceY;
 
-            p.vx += returnForceX;
-            p.vy += returnForceY;
-
-            p.vy += returnForceY;
-            const dx = mx - p.x;
-            const dy = my - p.y;
+            const dx = mx - px;
+            const dy = my - py;
             const distSq = dx * dx + dy * dy;
-            const dist = Math.sqrt(distSq);
 
             const radius = 5.0;
-            const force = 5.0;
+            const radiusSq = radius * radius;
 
-            if (dist < radius) {
+            if (distSq < radiusSq) {
+                const dist = Math.sqrt(distSq);
+                const force = 5.0;
                 const angle = Math.atan2(dy, dx);
                 const repulseForce = (1 - dist / radius) * force;
-                p.vx -= Math.cos(angle) * repulseForce * 0.05;
-                p.vy -= Math.sin(angle) * repulseForce * 0.05;
+
+                velocities[i3] -= Math.cos(angle) * repulseForce * 0.05;
+                velocities[i3 + 1] -= Math.sin(angle) * repulseForce * 0.05;
             }
 
             const friction = 0.80;
-            p.vx *= friction;
-            p.vy *= friction;
+            velocities[i3] *= friction;
+            velocities[i3 + 1] *= friction;
 
-            p.x += p.vx;
-            p.y += p.vy;
-
-            positions[i3] = p.x;
-            positions[i3 + 1] = p.y;
+            currentPositions[i3] += velocities[i3];
+            currentPositions[i3 + 1] += velocities[i3 + 1];
         }
 
         mesh.current.geometry.attributes.position.needsUpdate = true;
