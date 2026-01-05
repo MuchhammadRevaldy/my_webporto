@@ -76,22 +76,22 @@ function ShootingStar() {
                 const targetX = (Math.random() - 0.5) * (viewport.width * 0.5);
                 const targetY = (Math.random() - 0.5) * (viewport.height * 0.5);
 
-                if (spawnType === 0) { // Top-Left
+                if (spawnType === 0) {
                     startX = -viewport.width / 2 - offset;
                     startY = viewport.height / 2 + offset;
-                } else if (spawnType === 1) { // Top-Right
+                } else if (spawnType === 1) {
                     startX = viewport.width / 2 + offset;
                     startY = viewport.height / 2 + offset;
-                } else if (spawnType === 2) { // Bottom-Left
+                } else if (spawnType === 2) {
                     startX = -viewport.width / 2 - offset;
                     startY = -viewport.height / 2 - offset;
-                } else if (spawnType === 3) { // Bottom-Right
+                } else if (spawnType === 3) {
                     startX = viewport.width / 2 + offset;
                     startY = -viewport.height / 2 - offset;
-                } else if (spawnType === 4) { // Left Side (Random Y)
+                } else if (spawnType === 4) {
                     startX = -viewport.width / 2 - offset;
                     startY = (Math.random() - 0.5) * viewport.height;
-                } else { // Right Side (Random Y)
+                } else {
                     startX = viewport.width / 2 + offset;
                     startY = (Math.random() - 0.5) * viewport.height;
                 }
@@ -143,7 +143,7 @@ function Particles({ count = 1500 }) {
 
     const circleTexture = useMemo(() => getCircleTexture(), []);
 
-    // Generate initial positions
+
     const particles = useMemo(() => {
         const temp = [];
         for (let i = 0; i < count; i++) {
@@ -160,7 +160,7 @@ function Particles({ count = 1500 }) {
         return temp;
     }, [viewport]);
 
-    // Create geometry buffers
+
     const [positions, colors] = useMemo(() => {
         const pos = new Float32Array(count * 3);
         const col = new Float32Array(count * 3);
@@ -289,12 +289,12 @@ function Particles({ count = 1500 }) {
 
 export function WarpStars({ isWarping }) {
     const { viewport } = useThree();
-    const count = 2000;
+    const count = 1500;
     const mesh = useRef();
 
     const texture = useMemo(() => getCircleTexture(), []);
 
-    // Initial positions
+
     const [positions, initialZ] = useMemo(() => {
         const pos = new Float32Array(count * 3);
         const zArr = new Float32Array(count);
@@ -327,11 +327,6 @@ export function WarpStars({ isWarping }) {
 
         for (let i = 0; i < count; i++) {
             const i3 = i * 3;
-
-            // Move Z towards camera (positive direction usually if looking down -Z, 
-            // but here we set camera at +5 looking at 0,0,0 usually? 
-            // Let's assume standard: Camera at +5. Stars at -50..0.
-            // Move +Z to approach camera.
 
             positions[i3 + 2] += currentSpeed * delta;
 
@@ -375,7 +370,25 @@ export function WarpStars({ isWarping }) {
 export default function GlobalBackground() {
     return (
         <div className="fixed inset-0 -z-10 bg-space-900">
-            <Canvas camera={{ position: [0, 0, 5], fov: 75 }} gl={{ antialias: false, powerPreference: "high-performance" }}>
+            <Canvas
+                camera={{ position: [0, 0, 5], fov: 75 }}
+                gl={{
+                    antialias: false,
+                    powerPreference: "high-performance",
+                    preserveDrawingBuffer: false,
+                    failIfMajorPerformanceCaveat: true
+                }}
+                dpr={[1, 1.5]} // Limit pixel ratio for performance
+                onCreated={({ gl }) => {
+                    gl.domElement.addEventListener('webglcontextlost', (event) => {
+                        event.preventDefault();
+                        console.warn('WebGL Context Lost: Attempting to restore...');
+                    }, false);
+                    gl.domElement.addEventListener('webglcontextrestored', () => {
+                        console.log('WebGL Context Restored');
+                    }, false);
+                }}
+            >
                 <Particles />
             </Canvas>
         </div>

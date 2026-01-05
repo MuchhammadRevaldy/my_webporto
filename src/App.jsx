@@ -11,21 +11,28 @@ import Portfolio from './components/Sections/Portfolio';
 import Achievements from './components/Sections/Achievements';
 import TechStack from './components/Sections/TechStack';
 import Contact from './components/Sections/Contact';
+import CVPreview from './components/UI/CVPreview';
 import Magnetic from './components/UI/Magnetic';
 import BubbleText from './components/UI/BubbleText';
 
 function App() {
   const [introFinished, setIntroFinished] = useState(false);
+  const [contentVisible, setContentVisible] = useState(false);
   const [isWarping, setIsWarping] = useState(false);
+  const [showCV, setShowCV] = useState(false);
 
   useEffect(() => {
     if (introFinished) {
-      const lenis = new Lenis();
-      function raf(time) {
-        lenis.raf(time);
+      // Small delay before showing heavy content to allow browser to recover from "warp"
+      setTimeout(() => {
+        setContentVisible(true);
+        const lenis = new Lenis();
+        function raf(time) {
+          lenis.raf(time);
+          requestAnimationFrame(raf);
+        }
         requestAnimationFrame(raf);
-      }
-      requestAnimationFrame(raf);
+      }, 100);
     }
   }, [introFinished]);
 
@@ -100,12 +107,17 @@ function App() {
           >
             <Navbar />
             <Hero />
-            <About />
-            <Experience />
-            <Achievements />
-            <Portfolio />
-            <TechStack />
-            <Contact />
+            {contentVisible && (
+              <>
+                <About />
+                <Experience />
+                <Achievements />
+                <Portfolio />
+                <TechStack />
+                <Contact onOpenCV={() => setShowCV(true)} />
+              </>
+            )}
+            <CVPreview isOpen={showCV} onClose={() => setShowCV(false)} />
           </motion.div>
         </>
       )}

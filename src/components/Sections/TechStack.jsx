@@ -18,7 +18,7 @@ const containerVariants = {
 };
 
 const entranceVariants = {
-    hidden: { x: -300, opacity: 0 }, // Slide from Left
+    hidden: { x: -300, opacity: 0 },
     visible: (i) => ({
         x: 0,
         opacity: 1,
@@ -38,7 +38,7 @@ const floatVariants = {
             repeat: Infinity,
             duration: 3.5,
             ease: "easeInOut",
-            delay: -i * 0.5 // Traveling Wave Phase Shift
+            delay: -i * 0.5
         }
     })
 };

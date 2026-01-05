@@ -4,7 +4,7 @@ import { FiGithub, FiAlertTriangle, FiX, FiCheck } from 'react-icons/fi';
 import Magnetic from '../UI/Magnetic';
 import BubbleText from '../UI/BubbleText';
 
-export default function Contact() {
+export default function Contact({ onOpenCV }) {
     const [showGithubModal, setShowGithubModal] = useState(false);
 
     return (
@@ -35,7 +35,10 @@ export default function Contact() {
                     </Magnetic>
 
                     <Magnetic>
-                        <button className="px-8 py-4 border border-white/20 text-white font-bold rounded-full text-lg hover:bg-white/10 transition-colors backdrop-blur-sm">
+                        <button
+                            onClick={onOpenCV}
+                            className="px-8 py-4 border border-white/20 text-white font-bold rounded-full text-lg hover:bg-white/10 transition-colors backdrop-blur-sm"
+                        >
                             Download CV
                         </button>
                     </Magnetic>
@@ -53,10 +56,9 @@ export default function Contact() {
             </motion.div>
 
             <footer className="absolute bottom-4 text-white/20 text-sm font-mono text-center w-full">
-                © {new Date().getFullYear()} Revaldy Sandy Aji. Antigravity Design.
+                © {new Date().getFullYear()} Revaldy Sandy Aji.
             </footer>
 
-            {/* GitHub Disclaimer Modal */}
             <AnimatePresence>
                 {showGithubModal && (
                     <motion.div

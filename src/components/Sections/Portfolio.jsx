@@ -103,7 +103,7 @@ export default function Portfolio() {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [itemsPerView, setItemsPerView] = useState(1);
 
-    // Update items per view based on resize
+
     useEffect(() => {
         const handleResize = () => {
             if (window.innerWidth >= 768) {
@@ -113,17 +113,14 @@ export default function Portfolio() {
             }
         };
 
-        handleResize(); // Initial call
+        handleResize();
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
     const slideNext = () => {
         setCurrentIndex((prev) => {
-            // If we are at the end (showing the last possible full view), loop to 0
-            // The max index we can slide to is: Total Items - Items Per View
-            // But user wants to loop.
-            // Let's loop when we reach the very end.
+
             const maxIndex = projects.length - itemsPerView;
             if (prev >= maxIndex) return 0;
             return prev + 1;
@@ -179,7 +176,7 @@ export default function Portfolio() {
                         dragConstraints={{ left: 0, right: 0 }}
                         dragElastic={0.2}
                         onDragEnd={(e, { offset, velocity }) => {
-                            const swipe = offset.x; // negative = left, positive = right
+                            const swipe = offset.x;
                             const swipeThreshold = 50;
 
                             if (swipe < -swipeThreshold || velocity.x < -500) {

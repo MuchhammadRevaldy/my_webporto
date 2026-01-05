@@ -26,8 +26,8 @@ export default function Navbar() {
                 }
             });
         }, {
-            threshold: 0.3, // Trigger when 30% visible
-            rootMargin: "-10% 0px -10% 0px" // Adjust viewport trigger zone
+            threshold: 0.3,
+            rootMargin: "-10% 0px -10% 0px"
         });
 
         sections.forEach(section => {
@@ -40,7 +40,7 @@ export default function Navbar() {
     }, []);
 
     const scrollToSection = (id) => {
-        setActiveSection(id); // Instant visual update
+        setActiveSection(id);
         const element = document.getElementById(id);
         if (element) {
             element.scrollIntoView({ behavior: 'smooth' });
