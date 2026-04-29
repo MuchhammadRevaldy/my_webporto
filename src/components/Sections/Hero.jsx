@@ -1,12 +1,15 @@
-import React, { useRef } from 'react';
+import React, { useRef, Suspense } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Float, Wireframe } from '@react-three/drei';
+import { Float, useGLTF } from '@react-three/drei';
 import { motion } from 'framer-motion';
 import Magnetic from '../UI/Magnetic';
 import BubbleText from '../UI/BubbleText';
 
+import gltfPath from '../../assets/cloner_cube_simple_copy.gltf';
+
 function HeroObject() {
     const meshRef = useRef();
+    const { scene } = useGLTF(gltfPath);
 
     useFrame((state) => {
         const time = state.clock.getElapsedTime();
@@ -16,10 +19,11 @@ function HeroObject() {
 
     return (
         <Float speed={2} rotationIntensity={1.5} floatIntensity={2}>
-            <mesh ref={meshRef} scale={2}>
-                <icosahedronGeometry args={[1, 1]} />
-                <meshStandardMaterial color="#64ffda" wireframe />
-            </mesh>
+            <primitive
+                object={scene}
+                ref={meshRef}
+                scale={2}
+            />
         </Float>
     );
 }
@@ -51,7 +55,9 @@ export default function Hero() {
                 <Canvas>
                     <ambientLight intensity={0.5} />
                     <pointLight position={[10, 10, 10]} />
-                    <HeroObject />
+                    <Suspense fallback={null}>
+                        <HeroObject />
+                    </Suspense>
                 </Canvas>
             </div>
         </section >

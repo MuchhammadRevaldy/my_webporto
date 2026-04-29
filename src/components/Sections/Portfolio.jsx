@@ -4,6 +4,20 @@ import { FiExternalLink, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 
 const projects = [
     {
+        id: 9,
+        title: "3D Human Web",
+        desc: "An immersive 3D web experience featuring a fully interactive human model rendered in real-time on the browser. Built with cutting-edge Three.js and React Three Fiber for fluid 3D animations, camera controls, and dynamic lighting — a showcase of modern frontend 3D capabilities.",
+        tags: ["React", "Three.js", "React Three Fiber", "3D", "WebGL"],
+        link: "https://3d-human-web.vercel.app/"
+    },
+    {
+        id: 8,
+        title: "LTE Lyzer — WebGIS",
+        desc: "A WebGIS platform for visualizing and analyzing LTE network coverage data across geographic regions. Features interactive maps, signal quality heatmaps, and layer-based spatial data exploration to support telecommunications network planning.",
+        tags: ["WebGIS", "Leaflet.js", "Spatial Data", "Network Analysis"],
+        link: "https://lte-lyzer.atmadja.id/"
+    },
+    {
         id: 7,
         title: "MindSight",
         desc: "AI-powered emotional intelligence platform that helps users discover their inner self through facial analysis and psychology-based personalized insights.",
@@ -20,9 +34,8 @@ const projects = [
     {
         id: 6,
         title: "NutriGuard",
-        desc: "Integrated health platform featuring AI-powered food scanning (NutriScan) utilizing an image detection model, family profile management, and smart recipe generation. Uses Groq API for rapid analysis and Larave/Python backend.",
+        desc: "Integrated health platform featuring AI-powered food scanning (NutriScan) utilizing an image detection model, family profile management, and smart recipe generation. Uses Groq API for rapid analysis and Laravel/Python backend.",
         tags: ["React.js", "Laravel", "Python", "Groq API"],
-        link: "https://lte-lyzer.atmadja.id/"
     },
     {
         id: 1,
